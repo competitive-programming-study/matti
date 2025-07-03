@@ -102,7 +102,6 @@ pub fn missing_integer_mark(a: &[u32]) -> u32 {
         }
     }
 
-
     for (i, &val) in arr.iter().enumerate() {
         if val == -1 {
             return i as u32;
@@ -153,7 +152,7 @@ mod test {
 
     static TO_TEST: [(&str, fn(&[u32]) -> u32); 4] = [
         ("GAUSS", missing_integer),
-        ("MARK",missing_integer_mark),
+        ("MARK", missing_integer_mark),
         ("SWAP", missing_integer_swap),
         ("XOR", missing_integer_xor),
     ];

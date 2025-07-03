@@ -1,6 +1,8 @@
 [package]
-name = "lezione1"
+name = "code"
 version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+clap = "4.5.40"
+inquire = "0.7.5"
