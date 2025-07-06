@@ -1,4 +1,3 @@
-
 #[macro_export]
 macro_rules! tree {
     ($val:expr, $left:expr, $right:expr) => {
@@ -76,29 +75,27 @@ impl<T> TreeNode<T> {
     pub fn right(&self) -> Option<&TreeNode<T>> {
         self.right.as_deref()
     }
-
 }
 
 pub fn max_path(bin: &TreeNode<i32>) -> i32 {
     //Tuple having (max_path in subtree , sum_special_nodes in subtree)
     fn max_path_rec(bin: &TreeNode<i32>) -> (i32, i32) {
         match (bin.left(), bin.right()) {
-            (None, None) => 
-                (bin.val,i32::MIN),
-            
+            (None, None) => (bin.val, i32::MIN),
+
             (Some(t), None) | (None, Some(t)) => {
-                let (max_path,max_sum) = max_path_rec(t);
+                let (max_path, max_sum) = max_path_rec(t);
                 (bin.val + max_path, max_sum)
             }
 
             (Some(s), Some(d)) => {
-                let (sx_path,sx_sum) = max_path_rec(s);
-                let (dx_path,dx_sum) = max_path_rec(d);
+                let (sx_path, sx_sum) = max_path_rec(s);
+                let (dx_path, dx_sum) = max_path_rec(d);
 
                 let max_path = bin.val + sx_path.max(dx_path);
                 let sum = sx_path + dx_path + bin.val;
 
-                (max_path,sum.max(sx_sum).max(dx_sum))
+                (max_path, sum.max(sx_sum).max(dx_sum))
             }
         }
     }

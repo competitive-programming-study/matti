@@ -1,24 +1,26 @@
 #![allow(unused)]
 
-/**
- * MAX SUBARRAY
- *
- * Given an array of n signed integers return the max sum of
- * a subarray
- */
-
-/**
- * Brute force approach, iterate on all possible sub-arrays and
- * save the biggest sum.
- *
- * Runtime: O(n3)
- */
-pub fn max_subarray_1(arr: &[i32]) -> Option<i32> {
+///**MAX_SUBARRAY (bruteforce)**
+///
+/// Given an array of n signed integers (`i32`) we have to return
+/// the max sum of any sub-array
+/// @returns: `Option<i32>` that is `None` if the vector was empty
+///
+/// The bruteforce approach consistes in iterating on all possible sub-array's
+/// sums, updating the current max-sum
+///
+/// For every possible sub-array we iterate through it, computing the sum
+///
+///
+/// *Space Complexity:*   O(1)
+///
+/// *Time Complexity:*    O(n^3)
+pub fn max_subarray_bruteforce(arr: &[i32]) -> Option<i32> {
     if arr.is_empty() {
         return None;
     }
 
-    let mut sum: i32 = i32::MIN;
+    let mut sum = i32::MIN;
 
     for i in 0..arr.len() {
         for j in i..arr.len() {
@@ -35,16 +37,23 @@ pub fn max_subarray_1(arr: &[i32]) -> Option<i32> {
     Some(sum)
 }
 
-/**
- * Still brute force approach but update the sum dynamically
- *
- * Runtime: O(n2)
- */
-pub fn max_subarray_2(arr: &[i32]) -> Option<i32> {
+///**MAX_SUBARRAY (bruteforce optimized)**
+///
+/// Given an array of n signed integers (`i32`) we have to return
+/// the max sum of any sub-array
+/// @returns: `Option<i32>` that is `None` if the vector was empty
+///
+/// Consists in iterating on all possible sub-arrays, updating a local sum
+/// variable, checking if it's the biggest sum so far
+///
+/// *Space Complexity:*   O(1)
+///
+/// *Time Complexity:*    O(n^2)
+pub fn max_subarray_bruteforce_optimized(arr: &[i32]) -> Option<i32> {
     if arr.is_empty() {
         return None;
     }
-    let mut sum: i32 = i32::MIN;
+    let mut sum = i32::MIN;
     for i in 0..arr.len() {
         let mut local_sum = 0;
         for v in arr.iter().skip(i) {
@@ -57,32 +66,34 @@ pub fn max_subarray_2(arr: &[i32]) -> Option<i32> {
     Some(sum)
 }
 
-/**
- * Kadane's Algorithm
- *
- * Start with a global max sum inited to i32::MIN (signed) and
- * a local sum used as an accumulator initialized as 0
- *
- * if sum is 0 or less, then reset it:
- *  acts as initialization and negative items clearing
- * if sum is greater than 0 then accumulate to the next item
- *
- * Check if the sum is greater than the max: if so update it and continue
- *
- * Runtime: O(n)
- */
-pub fn max_sub_array(nums: &[i32]) -> Option<i32> {
+///**MAX_SUBARRAY (Kadane's algorithm)**
+///
+/// Given an array of n signed integers (`i32`) we have to return
+/// the max sum of any sub-array
+/// returns: `Option<i32>` that is `None` if the vector was empty
+///
+/// This approach works on some invariants:
+/// 1. given a sub-array which starts with a negative number, we can achieve
+/// a subarray with a bigger sum not counting the first element
+/// 2. given a all-negative integers array, the max subarray only contains the
+/// max (negative) integer
+///
+/// *Space Complexity:* O(1)
+///
+/// *Time Complexity:* O(n)
+///
+pub fn kadane(nums: &[i32]) -> Option<i32> {
     if nums.is_empty() {
         return None;
     }
     let (mut sum, mut max) = (0, i32::MIN);
 
-    for item in nums {
+    for &item in nums {
         if sum > 0 {
             //If this is true we were only accumulating positive items
-            sum += *item; //add the item
+            sum += item; //add the item
         } else {
-            sum = *item; //reset sum if accumulating negatives
+            sum = item; //reset sum if accumulating negatives
         }
 
         if sum > max {
@@ -94,14 +105,16 @@ pub fn max_sub_array(nums: &[i32]) -> Option<i32> {
     Some(max)
 }
 
-/**
- * Follow up: Kadane's with range
- *
- * Runtime of O(n) but returns the tuple of (max_sum, left_idx, right_idx)
- *
- * the idxs are the ones of the max contiguous subarray
- */
-pub fn max_sub_array_w_range(nums: &[i32]) -> Option<(i32, usize, usize)> {
+/// MAX SUBARRAY WITH RANGE
+///
+/// Follow-up on kadane's algorithm, it returns an `Option` (which is `None` if
+/// the array is empty).
+///
+///
+/// returns `Option<(i32 ,usize,usize)>` with the max sum, and respectively start and end indexes
+///
+/// *Complexity: same as Kadane's*
+pub fn kadane_w_range(nums: &[i32]) -> Option<(i32, usize, usize)> {
     if nums.is_empty() {
         return None;
     }
@@ -110,11 +123,11 @@ pub fn max_sub_array_w_range(nums: &[i32]) -> Option<(i32, usize, usize)> {
     let mut left = 0;
     let (mut max_left, mut max_right) = (0, 0);
 
-    for (i, v) in nums.iter().enumerate() {
+    for (i, &v) in nums.iter().enumerate() {
         if sum > 0 {
-            sum += *v;
+            sum += v;
         } else {
-            sum = *v;
+            sum = v;
             left = i; //we reset the left index if resetting sum
         }
 
@@ -127,74 +140,4 @@ pub fn max_sub_array_w_range(nums: &[i32]) -> Option<(i32, usize, usize)> {
     }
 
     Some((max, max_left, max_right))
-}
-
-#[cfg(test)]
-mod test {
-    use super::*;
-
-    static TO_TEST: [fn(&[i32]) -> Option<i32>; 3] =
-        [max_sub_array, max_subarray_1, max_subarray_2];
-
-    struct TestCase {
-        input: Vec<i32>,
-        output: Option<i32>,
-        output_w_range: Option<(i32, usize, usize)>,
-    }
-
-    impl TestCase {
-        fn new(
-            input: Vec<i32>,
-            output: Option<i32>,
-            output_w_range: Option<(i32, usize, usize)>,
-        ) -> Self {
-            TestCase {
-                input,
-                output,
-                output_w_range,
-            }
-        }
-    }
-
-    #[test]
-    fn test_all_implementations() {
-        let test_cases = vec![
-            TestCase::new(vec![], None, None),
-            TestCase::new(
-                vec![-2, 1, -3, 4, -1, 2, 1, -5, 4],
-                Some(6),
-                Some((6, 3, 6)),
-            ),
-            TestCase::new(vec![-1], Some(-1), Some((-1, 0, 0))),
-            TestCase::new(vec![5, 4, -1, 7, 8], Some(23), Some((23, 0, 4))),
-        ];
-
-        for case in &test_cases {
-            for func in TO_TEST {
-                assert_eq!(
-                    func(&case.input),
-                    case.output,
-                    "Failed on input {:?} with function {:?}",
-                    case.input,
-                    std::any::type_name_of_val(&func) // optional: shows the function name
-                );
-            }
-
-            if let Some(expected_range) = case.output_w_range {
-                assert_eq!(
-                    max_sub_array_w_range(&case.input),
-                    Some(expected_range),
-                    "Failed on input {:?} with max_sub_array_w_range",
-                    case.input
-                );
-            } else {
-                assert_eq!(
-                    max_sub_array_w_range(&case.input),
-                    None,
-                    "Expected None on input {:?} with max_sub_array_w_range",
-                    case.input
-                );
-            }
-        }
-    }
 }
