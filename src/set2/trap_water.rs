@@ -1,90 +1,123 @@
 #![allow(unused)]
 
-/**
- * We keep a local counter in which we accumulate the water if we're unsure there
- * exists a barrier high enough.
- *
- * If we find the barrier, we update the barrier and commit the local water to the
- * global water.
- *
- * To handle this we need 2 sweeps, one from left to right the other in reverse, because
- * after the last (left) barrier there could be lower barriers that can't be caught
- *
- * To do this we iterate in reverse until and comprising the last barrier index
- *
- * Runtime: O(n)
- *
- * At most 2 lookups per cell
- *
- */
-pub fn trap_2_pass(heights: &[i32]) -> i32 {
-    let mut last_barrier_index = 0;
-    let (mut barrier, mut local_water, mut water) = (0, 0, 0);
+/// **TRAP WATER (2 passes)**
+/// 
+/// Given an array of positive integers `u32` that represent heights find the max amount
+/// of water that can be trapped between all heights
+/// 
+/// **EXAMPLE**
+/// ```
+/// Height: [0,1,0,2,1,0,1,3,2,1,2,1]
+///             █
+///       █ w w █ █ w █
+///   █ w █ w █ █ █ █ █ █
+///  ████████████████████
+/// ```
+/// 
+/// A simple approach consists is comparing the current height to
+/// a local maximum. if it's lower then we accumulate the difference
+/// between those 2, in a `local water` variable (expecting a higher max)
+/// committing it to the global water, when we find it.
+/// 
+/// **IMPORTAT**: This approach is subsceptible to local maxima, where we stop
+/// accumulating the water. To solve this, we iterate 2 times, one from left to
+/// right, the other from right to left (stopping at the local maxima).
+/// 
+/// *Time Complexity*: 2n ~ O(n)
+/// 
+/// *Space Complexity*: O(1)
+pub fn trap_water_2_pass(heights: &[u32]) -> u32 {
+    //used for the second iteration
+    let mut max_height_idx = 0;
 
-    for (i, &e) in heights.iter().enumerate() {
-        if e >= barrier {
-            barrier = e;
-            last_barrier_index = i;
+    let (mut max_height, mut local_water, mut water) = (0, 0, 0);
+
+    //First iteration
+    for (i, &h) in heights.iter().enumerate() {
+        //Commit the water if found an higher max
+        if h >= max_height {
+            max_height = h;
+            max_height_idx = i;
             water += local_water;
-            local_water = 0;
+            local_water = 0;    //reset the local to 0
         } else {
-            local_water += barrier - e;
+            //Accumulate the difference
+            local_water += max_height - h;
         }
     }
 
-    (barrier, local_water) = (0, 0);
+    (max_height, local_water) = (0, 0);
 
-    // do it in reverse until the barrier
-    for &e in heights.iter().skip(last_barrier_index).rev() {
-        if e >= barrier {
+    // Second iteration (right to left) until local maxima
+    for &e in heights.iter().skip(max_height_idx).rev() {
+        //Commit to global water
+        if e >= max_height {
             water += local_water;
-            barrier = e;
+            max_height = e;
             local_water = 0;
         } else {
-            local_water += barrier - e;
+            //accumulate the difference
+            local_water += max_height - e;
         }
     }
 
     water
 }
 
-/**
- * We use a two pointer (left, right) based approach, keeping a left max barrier
- * and right max barrier.
- *
- * We process left or right, based on which current cell is lowest, so we're sure
- * that there must exist at least one barrier that can contain our water.
- *
- * We update the max pointers if we find that the current cell is higher, else we
- * commit the water
- *
- * Runtime O(n)
- *
- * Only one lookup per cell
- *
- */
-pub fn trap(heights: &[i32]) -> i32 {
+/// **TRAP WATER (2 passes)**
+/// 
+/// Given an array of positive integers `u32` that represent heights find the max amount
+/// of water that can be trapped between all heights
+/// 
+/// **EXAMPLE**
+/// ```
+/// Height: [0,1,0,2,1,0,1,3,2,1,2,1]
+/// 
+///             █
+///       █ w w █ █ w █
+///   █ w █ w █ █ █ █ █ █
+///  ████████████████████
+/// ```
+/// 
+/// We use a 2 pointers approach, iterating through the heights conditionally from
+/// left or right based on the lowest height. For each side we keep 2 maxima and
+/// stop when the pointers flip.
+/// 
+/// **IMPORTANT**: In this way we manage to only iterate through the vector one time,
+/// It's important to note that a 2 iteration approach may be faster because it better
+/// uses spacial locality hence maximize cache performance
+/// 
+/// *Time Complexity*: O(n)
+/// 
+/// *Space Complexity*: O(1)
+pub fn trap_water(heights: &[u32]) -> u32 {
     let (mut left, mut right) = (0, heights.len() - 1);
     let mut water = 0;
     let (mut max_left, mut max_right) = (0, 0);
 
+    //Iterate until the pointers flip
     while (left < right) {
-        //process left if cell is lower than current right
+        //Conditionally process left or right based on the current height
+        
         if heights[left] < heights[right] {
-            //current cell higher than local max
+
+            //found new max (commit to global water)
             if heights[left] > max_left {
                 max_left = heights[left];
             } else {
-                //commit water (difference between) max and left
+                //accumulate difference between old max and current height
                 water += max_left - heights[left];
             }
             left += 1; //increment left pointer
-        } else {
+        
+        } else {    //Same thing as above
+            
             if heights[right] > max_right {
                 max_right = heights[right];
             } else {
                 water += max_right - heights[right];
             }
+
             right -= 1 //decrement right pointer;
         }
     }

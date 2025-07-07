@@ -1,3 +1,10 @@
+#[macro_export]
+macro_rules! test_case {
+    ($func:expr, ($($arg:expr),*), $expected:expr) => {
+        assert_eq!($func($($arg),*), $expected);
+    };
+}
+
 #[allow(unused)]
 pub struct TestCase<I, O> {
     input: I,

@@ -1,9 +1,9 @@
+use crate::path_util::*;
 use std::{
     fs::{self, File, OpenOptions},
     io::{BufRead as _, BufReader, Error, ErrorKind, Result, Write as _},
     path::Path,
 };
-use crate::path_util::*;
 
 fn create_test_file(set_name: &str, exercise_name: &str) -> Result<bool> {
     let test_path = get_test_path(exercise_name);

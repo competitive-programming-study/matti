@@ -1,6 +1,8 @@
-use std::{env, ffi::OsStr, path::{Path, PathBuf}};
-
-
+use std::{
+    env,
+    ffi::OsStr,
+    path::{Path, PathBuf},
+};
 
 const LIB_FILE: &str = "lib";
 const SRC_DIR: &str = "src";

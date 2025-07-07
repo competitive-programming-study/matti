@@ -1,4 +1,3 @@
-
 use automation::crud;
 use std::env;
 use std::process::exit;
@@ -46,12 +45,10 @@ fn main() {
                 Err(e) => eprintln!("Error: {e}"),
             }
         }
-        "update" => {
-            match crud::update_conf() {
-                Ok(_) => println!("Configuration updated."),
-                Err(e) => eprintln!("Error: {e}"),
-            }
-        }
+        "update" => match crud::update_conf() {
+            Ok(_) => println!("Configuration updated."),
+            Err(e) => eprintln!("Error: {e}"),
+        },
         _ => {
             print_usage();
             exit(1);
