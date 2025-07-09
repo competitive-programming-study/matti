@@ -1,9 +1,26 @@
 use crate::path_util::*;
+
 use std::{
     fs::{self, File, OpenOptions},
     io::{BufRead as _, BufReader, Error, ErrorKind, Result, Write as _},
     path::Path,
 };
+
+const IGNORE: &str = ".ignore";
+
+///
+/// Check if a set names is valid:
+/// 
+/// A set name is valid if the corresponding path doesn't exist or 
+/// the path exists and inside the set directory doesn't exist an
+/// ignore file
+/// 
+fn is_valid_set(set_name: &str) -> Result<bool> {
+    let path = get_set_path(set_name).join(IGNORE);
+    Ok(!fs::exists(path)?)
+
+}
+
 
 fn create_test_file(set_name: &str, exercise_name: &str) -> Result<bool> {
     let test_path = get_test_path(exercise_name);
@@ -49,6 +66,11 @@ fn create_test_file(set_name: &str, exercise_name: &str) -> Result<bool> {
 /// test file.
 ///
 pub fn new_exercise(set_name: &str, exercise_name: &str) -> Result<()> {
+
+    if !is_valid_set(set_name)?  {
+        return Err(Error::new(ErrorKind::PermissionDenied,"Shoudn't modify this directory [IGNORE FILE SETTED]"))
+    }
+
     let set_dir = get_set_path(set_name);
     // Create the set directory if it doesn't exist
     if !set_dir.exists() {
@@ -72,7 +94,7 @@ pub fn new_exercise(set_name: &str, exercise_name: &str) -> Result<()> {
     OpenOptions::new()
         .append(true)
         .open(get_mod_path(set_name))?
-        .write_fmt(format_args!("\npub mod {exercise_name};\n"))?;
+        .write_fmt(format_args!("\npub mod {exercise_name};"))?;
 
     // Create associated test file in tests directory
     create_test_file(set_name, exercise_name)?;
@@ -143,6 +165,11 @@ fn remove_set(set_name: &str) -> Result<bool> {
 /// file and updating the `mod.rs` file
 ///
 pub fn remove_exercise(set_name: &str, exercise_name: &str) -> Result<bool> {
+    if !is_valid_set(set_name)?  {
+        return Err(Error::new(ErrorKind::PermissionDenied,"Shoudn't modify this directory [IGNORE FILE SETTED]"))
+    }
+
+
     // Remove exercise file
     fs::remove_file(get_exercise_path(set_name, exercise_name))?;
     // Remove test file
@@ -214,22 +241,14 @@ pub fn update_conf() -> Result<()> {
         .filter(|d| d.metadata().as_ref().map(|m| m.is_dir()).unwrap_or(false))
         .map(|s| s.path())
         .map(|p| get_file_name(&p))
+        .filter(|s|is_valid_set(s).is_ok_and(|x|x))
         .collect::<Vec<String>>();
 
-    for set in sets.iter() {
-        build_index(set)?;
-    }
-
-    for set_res in fs::read_dir(get_source_dir())? {
-        let set = &set_res?;
-        let set_name = get_file_name(&set.path());
-        let meta = set.metadata();
-        if meta.as_ref().map(|m| m.is_dir()).unwrap_or(false) {
-            build_index(&set_name)?;
-            let set_to_search = set_name + ";";
-            if !mods.contains(&set_to_search) {
-                mods.push(set_to_search);
-            }
+    for s in sets {
+        build_index(&s)?;
+        let set_to_search = s + ";";
+        if !mods.contains(&set_to_search) {
+            mods.push(set_to_search);
         }
     }
 
