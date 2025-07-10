@@ -1,1 +1,0 @@
-FilterMap<std::slice::Iter<'_, String>, for<'a> fn(&'a str) -> Result<bool, std::io::Error> {is_valid_set}>
