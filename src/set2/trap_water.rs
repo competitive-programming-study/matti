@@ -6,13 +6,15 @@
 /// of water that can be trapped between all heights
 /// 
 /// **EXAMPLE**
+/// ```text
+/// Height= [0,1,0,2,1,0,1,3,2,1,2,1]
+/// 
+///             X
+///       X w w X X w X
+///   X w X w X X X X X X
+///  XXXXXXXXXXXXXXXXXXXX
 /// ```
-/// Height: [0,1,0,2,1,0,1,3,2,1,2,1]
-///             █
-///       █ w w █ █ w █
-///   █ w █ w █ █ █ █ █ █
-///  ████████████████████
-/// ```
+/// 
 /// 
 /// A simple approach consists is comparing the current height to
 /// a local maximum. if it's lower then we accumulate the difference
@@ -70,14 +72,15 @@ pub fn trap_water_2_pass(heights: &[u32]) -> u32 {
 /// of water that can be trapped between all heights
 /// 
 /// **EXAMPLE**
-/// ```
+/// ```text
 /// Height: [0,1,0,2,1,0,1,3,2,1,2,1]
 /// 
-///             █
-///       █ w w █ █ w █
-///   █ w █ w █ █ █ █ █ █
-///  ████████████████████
+///             X
+///       X w w X X w X
+///   X w X w X X X X X X
+///  XXXXXXXXXXXXXXXXXXXX
 /// ```
+/// 
 /// 
 /// We use a 2 pointers approach, iterating through the heights conditionally from
 /// left or right based on the lowest height. For each side we keep 2 maxima and
