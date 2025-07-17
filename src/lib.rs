@@ -5,3 +5,8 @@ pub mod set4;
 pub mod data_structs;
 pub mod test_util;
 pub mod set5;
+pub mod set6;
+pub mod set8;
+pub mod set7;
+pub mod set9;
+pub mod set10;
