@@ -1,4 +1,4 @@
-use std::collections::{BTreeSet};
+use std::collections::BTreeSet;
 
 /// **FROGS AND MOSQUITOS**
 ///
@@ -23,7 +23,7 @@ use std::collections::{BTreeSet};
 ///   so we can efficiently find the frog with minimum x that can reach a mosquito.
 /// - Use a lookup table (`Vec`) to track each frog’s position, tongue length, and number of mosquitoes eaten.
 /// - Maintain a second `BTreeSet` for *pending mosquitoes* that no frog could reach at arrival time.
-/// 
+///
 /// **Processing Steps:**
 /// 1. Initialize the frog set with each frog’s reach and position.
 /// 2. For each mosquito:
@@ -34,7 +34,7 @@ use std::collections::{BTreeSet};
 ///         - Check if it can now eat any pending mosquitoes, and process those.
 ///         - Re-insert the updated frog into the set.
 ///     - Otherwise, insert the mosquito into the pending set.
-/// 
+///
 /// **Frog Ordering:**
 /// Frogs are sorted by:
 /// 1. `max_reach = x + tongue`
@@ -42,30 +42,28 @@ use std::collections::{BTreeSet};
 /// 3. `id` (index)
 ///
 /// *Time Complexity*: O(n log(n)) + O(m log(m + n)) ~ O(m log(m + n))
-/// 
+///
 /// *Space Complexity*: O(n + m)
-/// 
-/// 
-pub fn frog_mosquitos(frogs: &[(i32,i32)], mosquitos: &[(i32,i32)]) -> Vec<(usize,i32)> {
-    type FrogLookup = (i32, i32, usize);    // (max_reach, start, id)
-    type FrogState  = (i32, i32, usize);    // (start, tongue, mosquitoes_eaten)
-    type Mosquito   = (i32, i32);           // (position,size)
+///
+///
+pub fn frog_mosquitos(frogs: &[(i32, i32)], mosquitos: &[(i32, i32)]) -> Vec<(usize, i32)> {
+    type FrogLookup = (i32, i32, usize); // (max_reach, start, id)
+    type FrogState = (i32, i32, usize); // (start, tongue, mosquitoes_eaten)
+    type Mosquito = (i32, i32); // (position,size)
 
     //index each frog in the lookup table
-    let mut lookup = 
-        frogs.into_iter()
-        .map(|&(pos,tongue)| (pos,tongue,0usize))
+    let mut lookup = frogs
+        .into_iter()
+        .map(|&(pos, tongue)| (pos, tongue, 0usize))
         .collect::<Vec<FrogState>>();
 
     //Create the TreeMap indexing frog by max_reach
     let mut frog_set: BTreeSet<FrogLookup> = BTreeSet::new();
     let mut pending_mosquitos: BTreeSet<Mosquito> = BTreeSet::new();
 
-
-    
     // TreeSet Initialization: O(log(1) + log(2) + ... log(n)) = O(log(n!)) -> using Stirling Approx -> O(n log(n))
-    for (i,&(pos,tongue,_)) in lookup.iter().enumerate() {
-        let frog: FrogLookup = (pos + tongue,pos,i);
+    for (i, &(pos, tongue, _)) in lookup.iter().enumerate() {
+        let frog: FrogLookup = (pos + tongue, pos, i);
         frog_set.insert(frog);
     }
 
@@ -80,18 +78,18 @@ pub fn frog_mosquitos(frogs: &[(i32,i32)], mosquitos: &[(i32,i32)]) -> Vec<(usiz
     //
     //Total loop complexity = O(m)*O(log(n))*O(log(m)) = O(m*log(n+m))
     //
-    for &(pos_m,size) in mosquitos {
+    for &(pos_m, size) in mosquitos {
         // Search frog that can eat
         // We want the frog such that (pos + tongue) >= mosquito.pos
         // Range returns an iterator, so we check if we have at least one frog
-        if let Some(&(reach, pos_f, id)) = frog_set.range((pos_m,i32::MIN,usize::MIN)..).next() {
+        if let Some(&(reach, pos_f, id)) = frog_set.range((pos_m, i32::MIN, usize::MIN)..).next() {
             if pos_f <= pos_m {
                 //println!("Frog {id} can eat mosquito at position {pos_m}");
                 //remove old entry
-                frog_set.remove(&(reach,pos_f,id));
+                frog_set.remove(&(reach, pos_f, id));
 
                 //get frog fields from the lookup table
-                let (start,tongue,eaten) = &mut lookup[id];
+                let (start, tongue, eaten) = &mut lookup[id];
 
                 //update frog attributes based on this mosquito
                 *eaten += 1;
@@ -103,17 +101,18 @@ pub fn frog_mosquitos(frogs: &[(i32,i32)], mosquitos: &[(i32,i32)]) -> Vec<(usiz
                 loop {
                     //we look for all mosquitos which position is lower or equal than our new reach
 
-                    // We could iterate over all mosquitos in the range but we'd have to remove them 
+                    // We could iterate over all mosquitos in the range but we'd have to remove them
                     // and borrow-checker woudn't allow to perform mutable operations when an immutable
-                    // iterator exists so the complexity is the same 
-                    if let Some(&(pos,size)) = pending_mosquitos.range(..=(new_reach,i32::MAX)).next() {
-                        
+                    // iterator exists so the complexity is the same
+                    if let Some(&(pos, size)) =
+                        pending_mosquitos.range(..=(new_reach, i32::MAX)).next()
+                    {
                         //frog can eat this so evict from set
                         if pos_f <= pos {
                             //println!("[Pending] Frog {id} can eat mosquito at position {pos}");
 
                             //evict the mosquito from the set
-                            pending_mosquitos.remove(&(pos,size));
+                            pending_mosquitos.remove(&(pos, size));
 
                             //update the frog state
                             *tongue += size;
@@ -127,21 +126,20 @@ pub fn frog_mosquitos(frogs: &[(i32,i32)], mosquitos: &[(i32,i32)]) -> Vec<(usiz
                     }
 
                     break;
-
                 }
 
                 //store the frog back
-                frog_set.insert((new_reach,*start,id));
-                continue;   // the frog ate at least a mosquito so we don't insert it in pending
-
+                frog_set.insert((new_reach, *start, id));
+                continue; // the frog ate at least a mosquito so we don't insert it in pending
             }
         }
 
         //println!("Inserting Mosquito as pending ({pos_m},{size})");
-        pending_mosquitos.insert((pos_m,size));
+        pending_mosquitos.insert((pos_m, size));
     }
 
-    lookup.iter().map(|&(_,tongue,eaten)|(eaten,tongue)).collect::<Vec<(usize,i32)>>()
-    
-
+    lookup
+        .iter()
+        .map(|&(_, tongue, eaten)| (eaten, tongue))
+        .collect::<Vec<(usize, i32)>>()
 }

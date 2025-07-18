@@ -1,18 +1,18 @@
 // /
 // / **COW STEEPLECHASE**
-// / 
+// /
 // / Given a set of n 2d segments (x_1:i64,y_1;i64,x_2:i64,y_2:i64) find the earliest segment that removed resort
 // / in a set of not intersecting segments
-// / 
+// /
 // / **Strategy**
 // / Since we have to return the first segment that intersects, we have to process each segment in the order that
 // / they appear on the set. We initialize a lookup table for each segment, It will store the index of the segment
 // / which intersects with. (Intersection is simmetric so if x intersects with y then y intersects with x).
-// / 
+// /
 // / We have to order segments coordinates in order to process from left to right, we tag them `Begin` and `End` and
 // / we give them a segment index. We also use a intersection array as a container for each segment to mark intersection.
-// / 
-// / 
+// /
+// /
 // #[derive(PartialEq,PartialOrd,Eq,Ord,Debug,Clone,Copy)]
 // pub enum Segment{
 //     Start,
@@ -30,14 +30,14 @@
 //     let b = (i.2,i.3);
 //     let c = (j.0,j.1);
 //     let d = (j.2,j.3);
-//     counter_clockwise(a,c,d) != counter_clockwise(b,c,d) && 
+//     counter_clockwise(a,c,d) != counter_clockwise(b,c,d) &&
 //     counter_clockwise(a,b,c) != counter_clockwise(a,b,d)
 // }
 
 // pub fn cow_steeplechase_2(segments: &[(i64,i64,i64,i64)]) -> usize {
 
 //     //we store indexes for every intersection with the current index
-//     let intersect_lookup: Vec<i32> = vec![-1;segments.len()]; 
+//     let intersect_lookup: Vec<i32> = vec![-1;segments.len()];
 
 //     let points = segments
 //         .iter().
@@ -52,7 +52,6 @@
 //     points.sort_unstable();
 
 //     let set: BTreeSet<(i64,i64,Segment,usize)> = BTreeSet::new();
-    
 
 //     for (_,_,event,i) in points {
 //         if event == Segment::Start {
@@ -77,6 +76,5 @@
 //             }
 //         }
 //     }
-
 
 // }

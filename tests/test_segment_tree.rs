@@ -1,5 +1,5 @@
 use code::data_structs::segment_tree::SegmentTree;
-use rand::{rngs::StdRng, Rng, SeedableRng};
+use rand::{Rng, SeedableRng, rngs::StdRng};
 
 /* ---------- helpers ---------- */
 
@@ -37,8 +37,7 @@ fn naive_min_after_add(
 
 fn expect_tree_matches_array(tree: &mut SegmentTree, arr: &[i64]) {
     for i in 0..arr.len() {
-        assert_eq!(tree.min_range(i, i), arr[i],
-                    "leaf mismatch at index {i}");
+        assert_eq!(tree.min_range(i, i), arr[i], "leaf mismatch at index {i}");
     }
 }
 
@@ -52,15 +51,14 @@ fn build_and_point_queries() {
     expect_tree_matches_array(&mut st, &data);
 
     // global min should match std::iter::min
-    assert_eq!(st.min_range(0, data.len() - 1),
-                *data.iter().min().unwrap());
+    assert_eq!(st.min_range(0, data.len() - 1), *data.iter().min().unwrap());
 }
 
 #[test]
 fn range_add_then_query() {
     let mut st = SegmentTree::build(&[0, 0, 0, 0]);
-    st.add_range(1, 3, 10);          // [0,10,10,10]
-    st.add_range(0, 0, -5);          // [-5,10,10,10]
+    st.add_range(1, 3, 10); // [0,10,10,10]
+    st.add_range(0, 0, -5); // [-5,10,10,10]
     assert_eq!(st.min_range(0, 3), -5);
     assert_eq!(st.min_range(1, 2), 10);
     expect_tree_matches_array(&mut st, &[-5, 10, 10, 10]);
@@ -111,9 +109,10 @@ fn random_operations_against_naive() {
             let r = rng.random_range(0..N);
             let expected = naive_min_after_add(base.clone(), &log_ops, l, r);
             let got = st.min_range(l, r);
-            assert_eq!(got, expected,
-                        "mismatch after ops={log_ops:?}, query=({l},{r})");
+            assert_eq!(
+                got, expected,
+                "mismatch after ops={log_ops:?}, query=({l},{r})"
+            );
         }
     }
 }
-

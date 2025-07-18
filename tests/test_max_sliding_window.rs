@@ -8,7 +8,7 @@ const TO_TEST: [fn(&[i32], usize) -> Option<Vec<i32>>; 5] = [
     max_sliding_ideomatic,
     max_sliding_window_bst,
     max_sliding_window_heap,
-    max_sliding_window_deque
+    max_sliding_window_deque,
 ];
 
 #[test]
