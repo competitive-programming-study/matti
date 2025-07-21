@@ -101,7 +101,6 @@ pub fn min_jumps_greedy(slice: &[usize]) -> Option<usize> {
     None
 }
 
-
 #[cfg(test)]
 mod test_min_jumps {
     use super::*;
@@ -147,5 +146,4 @@ mod test_min_jumps {
         long_jump[0] = 999;
         run_both(&long_jump, Some(1));
     }
-
 }

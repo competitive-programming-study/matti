@@ -43,17 +43,17 @@ use std::collections::BTreeSet;
 ///
 /// ## Complexity
 /// We take O(nlog(n)) time to insert all frogs insie the BTree Set.
-/// 
+///
 /// Foreach mosquitoe: Theta(m)
 /// 1. look for the frog O(log(n))
-///      1.1: we can't eat the mosquito: have to store it O(log(m))
-///      1.2: we can eat the mosquito:
-///         1.2.1: remove the frog from the set O(log(n))
-///          1.2.2: at most, foreach mosquito pending: O(m)
-///             1.2.2.1: check if the frog can eat it O(log(n)) either remove it or not
-/// 
+/// 2. we can't eat the mosquito: have to store it O(log(m))
+/// 3. we can eat the mosquito:
+/// 4. remove the frog from the set O(log(n))
+/// 5. at most, foreach mosquito pending: O(m)
+/// 6. check if the frog can eat it O(log(n)) either remove it or not
+///
 /// The solution runs in O(nlog(n)) + O(m*log(n+m)) time.
-/// 
+///
 /// We need 2 BTreeSet to store the frogs, and all the mosquitoe in the case no frogs
 /// can eat them. This accounts for O(n*m);
 pub fn frog_mosquitoes(frogs: &[(i32, i32)], mosquitos: &[(i32, i32)]) -> Vec<(usize, i32)> {
@@ -77,7 +77,6 @@ pub fn frog_mosquitoes(frogs: &[(i32, i32)], mosquitos: &[(i32, i32)]) -> Vec<(u
         frog_set.insert(frog);
     }
 
-    
     for &(pos_m, size) in mosquitos {
         // Search frog that can eat
         // We want the frog such that (pos + tongue) >= mosquito.pos
@@ -152,7 +151,8 @@ mod test_frog_mosquitoes {
     #[test]
     fn test_1() {
         let frogs: Vec<(i32, i32)> = vec![(10, 2), (15, 0), (6, 1), (0, 1)];
-        let mosquitos: Vec<(i32, i32)> = vec![(110, 10), (1, 1), (6, 0), (15, 10), (14, 100), (12, 2)];
+        let mosquitos: Vec<(i32, i32)> =
+            vec![(110, 10), (1, 1), (6, 0), (15, 10), (14, 100), (12, 2)];
         let expected: Vec<(usize, i32)> = vec![(3, 114), (1, 10), (1, 1), (1, 2)];
 
         assert_eq!(frog_mosquitoes(&frogs, &mosquitos), expected);

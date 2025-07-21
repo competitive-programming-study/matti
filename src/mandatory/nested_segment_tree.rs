@@ -1,4 +1,4 @@
-use crate::data_structs::fenwick_tree::FenwickTree;
+use crate::data_structs::segment_tree::SegmentTreeSum;
 
 ///# Nested Segments
 ///
@@ -8,19 +8,19 @@ use crate::data_structs::fenwick_tree::FenwickTree;
 /// ## Return
 /// An array of usize with the count for each segment
 ///
-/// ## Fenwick Tree Approach
+/// ## Segment Tree Approach
 /// for the i'th segment we have to count the number of segments j such that l_i < l_j
 /// and r_i > r_j.
 ///
-/// We initialize the fenwick tree with a number of cells equal to max.r - min.r then we
+/// We initialize the segment tree with a number of cells equal to max.r - min.r then we
 /// sort the segments by l. For each r in the segment we add 1 to the tree to record the
 /// end of the segment.
 ///
-/// When processing each segment, we query sum (r-1) to get the number of segments, then
-/// we add -1 to r to not account for the current segment when processing the next segment
+/// When processing each segment, we query range_sum (r-1) to get the number of segments, then
+/// we add -1 to `r` to not account for the current segment when processing the next segment
 ///
 /// ## Complexity
-/// We sort the semgment, then for each segment we perform fenwick tree operations so the
+/// We sort the semgment, then for each segment we perform segment tree operations so the
 /// runtime is O(nlog(n))
 ///
 /// We require O(n) space to store the fenwick tree
@@ -32,34 +32,42 @@ pub fn nested_segments(segs: &[(i32, i32)]) -> Vec<usize> {
         return res;
     }
 
-    let (mut min, mut max) = (i32::MAX, i32::MIN);
-    //compute min and max right-points
+    // 1. Normalize coordinate space by getting min and max r
+    let (mut min_r, mut max_r) = (i32::MAX, i32::MIN);
     for &(_, r) in segs {
-        min = min.min(r);
-        max = max.max(r);
+        min_r = min_r.min(r);
+        max_r = max_r.max(r);
     }
 
-    //build the fenwick tree
-    let ln = (max - min + 2) as usize;
-    let mut ft: FenwickTree<i32> = FenwickTree::with_len(ln, 0);
+    // 2. Size of segment tree based on compressed r-coordinates
+    let size = (max_r - min_r + 1) as usize;
+    let mut st: SegmentTreeSum<i32> = SegmentTreeSum::build(&vec![0; size]);
 
+    // 3. Add 1 at each segment's right endpoint
     for &(_, r) in segs {
-        let index = (r + 1 - min) as usize;
-        let _ = ft.add(index, 1); //account for each segment end
+        let index = (r - min_r) as usize;
+        st.range_add(index, index, 1); // mark where segments end
     }
 
+    // 4. Sort by left endpoint (increasing), ties broken by r (doesn't matter since no overlap)
     let mut segs_sorted: Vec<(i32, i32, usize)> = segs
-        .to_vec()
         .iter()
         .enumerate()
         .map(|(i, &(l, r))| (l, r, i))
-        .collect(); //to keep indexing intact before sort
-    segs_sorted.sort(); //lexicographic ordering for tuples (increasing for left element)
+        .collect();
+    segs_sorted.sort_by_key(|&(l, _, _)| l);
 
+    // 5. For each segment, count segments that end before it (r_j < r_i)
     for (_, r, i) in segs_sorted {
-        let index = (r - min) as usize;
-        res[i] = ft.sum(index).unwrap() as usize; //all segments that end before this 
-        let _ = ft.add(index + 1, -1); //sub 1 to remove the segment that just ended
+        let index = (r - min_r) as usize;
+        if index > 0 {
+            res[i] = st.range_sum(0, index - 1) as usize;
+        } else {
+            res[i] = 0;
+        }
+
+        // Remove this segment’s right endpoint so it doesn’t affect future counts
+        st.range_add(index, index, -1);
     }
 
     res

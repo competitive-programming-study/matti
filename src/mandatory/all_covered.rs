@@ -2,7 +2,7 @@
 ///
 /// Given an array of intervals represented as tuples (begin: i32,end i32) and another interval
 ///  given by 2 parameters `left` and `right`.
-/// 
+///
 /// ## Returns
 /// `true` if the range is covered by the overlapping intervals
 ///
@@ -68,7 +68,7 @@ pub enum Event {
 /// ## Returns
 /// `true` if the provided interval is comprised in the other ones
 ///
-/// 
+///
 /// ## Complexity
 /// The time complexity is O(nlog(n)) due to initial sorting, we require linear
 /// time to process. We require O(m) additional space to store the sorted segments
@@ -127,23 +127,23 @@ mod test_all_covered {
 
     #[test]
     fn test_1() {
-        let v= [(1, 2), (3, 4), (5, 6)];
+        let v = [(1, 2), (3, 4), (5, 6)];
         let int = (2, 5);
-        assert_eq!(all_covered(&v,int),true);
-        assert_eq!(all_covered_sweep(&v,int),true);
+        assert_eq!(all_covered(&v, int), true);
+        assert_eq!(all_covered_sweep(&v, int), true);
     }
 
     #[test]
     fn test_2() {
-        let v= [(1, 10), (10, 20)];
+        let v = [(1, 10), (10, 20)];
         let int = (21, 21);
-        assert_eq!(all_covered(&v,int),false);
-        assert_eq!(all_covered_sweep(&v,int),false);
+        assert_eq!(all_covered(&v, int), false);
+        assert_eq!(all_covered_sweep(&v, int), false);
     }
 
     #[test]
     fn test_3() {
-        let v= [
+        let v = [
             (8, 31),
             (2, 20),
             (22, 25),
@@ -154,7 +154,7 @@ mod test_all_covered {
             (28, 39),
         ];
         let int = (2, 15);
-        assert_eq!(all_covered(&v,int),true);
-        assert_eq!(all_covered_sweep(&v,int),true);
+        assert_eq!(all_covered(&v, int), true);
+        assert_eq!(all_covered_sweep(&v, int), true);
     }
 }

@@ -19,13 +19,12 @@ pub fn wilbur_array(target: &[isize]) -> usize {
     let (mut steps, mut prev) = (0, 0);
 
     for &x in target {
-        steps += (&x - prev).abs();
+        steps += (x - prev).abs();
         prev = x;
     }
 
     steps as usize
 }
-
 
 #[cfg(test)]
 mod test_wilbur_array {
@@ -61,6 +60,3 @@ mod test_wilbur_array {
         assert_eq!(wilbur_array(target), 14);
     }
 }
-
-
-

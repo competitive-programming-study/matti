@@ -1,5 +1,5 @@
 use crate::data_structs::fenwick_tree::FenwickTree;
-use std::ops::{Add,Sub,Neg};
+use std::ops::{Add, Neg, Sub};
 
 pub struct UpdateArray<T> {
     ft: FenwickTree<T>,

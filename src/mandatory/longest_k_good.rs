@@ -19,14 +19,14 @@ use std::collections::HashMap;
 /// 5. check if the differenct between right and left is greater than actual best
 ///
 /// ## Complexity
-/// We take linear time to process the array. In order to keep the Hash Map, 
+/// We take linear time to process the array. In order to keep the Hash Map,
 /// we consider the case where the insertion of each element generates a collision,
 /// this would take O(n) steps for each element. Insert we could use a lookup vector
-/// with coordinate normalization, to store the frequency map, to beneficiate of 
+/// with coordinate normalization, to store the frequency map, to beneficiate of
 /// constant time lookup.
-/// 
+///
 /// With this approach we take linear O(n) time to process the solution.
-/// 
+///
 /// We need O(k) additional space to store the frequencies of each different item
 ///
 pub fn longest_k_good_segment(nums: &[i64], k: usize) -> Option<(usize, usize, usize)> {
@@ -91,5 +91,4 @@ mod test_longest_k_good {
         let (_, _, diff) = longest_k_good_segment(&v, k).unwrap();
         assert_eq!(diff, 0);
     }
-
 }

@@ -33,7 +33,7 @@ pub fn n_meetings(meetings: &[(usize, usize)]) -> usize {
         }
     }
 
-    return count;
+    count
 }
 
 #[cfg(test)]

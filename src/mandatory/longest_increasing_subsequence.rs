@@ -93,9 +93,9 @@ mod test_longest_increasing_subsequence {
     use super::*;
 
     fn run_both_versions(input: &[i32], expected: usize) {
-    assert_eq!(longest_increasing_subsequence(input), expected);
-    assert_eq!(longest_increasing_subsequence_binary(input), expected);
-}
+        assert_eq!(longest_increasing_subsequence(input), expected);
+        assert_eq!(longest_increasing_subsequence_binary(input), expected);
+    }
 
     #[test]
     fn test_empty() {
@@ -132,5 +132,4 @@ mod test_longest_increasing_subsequence {
     fn test_zigzag_pattern() {
         run_both_versions(&[1, 3, 2, 4, 3, 5], 4); // [1,2,3,5]
     }
-
 }

@@ -1,4 +1,3 @@
-
 use crate::data_structs::tree::TreeNode;
 
 ///
@@ -113,18 +112,18 @@ mod test_max_path_sum {
             )
         );
         let expected = Some(27);
-        assert_eq!(max_path_sum(&t),expected);
+        assert_eq!(max_path_sum(&t), expected);
     }
     #[test]
     fn test_generic_3() {
         let t = tree!(3, tree!(4, tree_leaf!(-10), tree_leaf!(4)), tree_leaf!(1));
         let expected = Some(12);
-        assert_eq!(max_path_sum(&t),expected);
+        assert_eq!(max_path_sum(&t), expected);
     }
     #[test]
     fn test_leaf_to_root() {
         let t = tree_right!(1, tree_leaf!(2));
         let expected = Some(3);
-        assert_eq!(max_path_sum(&t),expected);
+        assert_eq!(max_path_sum(&t), expected);
     }
 }

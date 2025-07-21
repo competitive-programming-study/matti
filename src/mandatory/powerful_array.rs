@@ -118,16 +118,16 @@ mod test_powerful_array {
     use super::*;
 
     #[test]
-fn test_codeforces() {
-    //this test case considers 1-indexing
-    assert_eq!(
-        powerful_array(&[i64::MAX, 1, 2, 1], &[(1, 2), (1, 3)]),
-        vec![3, 6]
-    );
-    //this test case considers 0-indexing
-    assert_eq!(
-        powerful_array(&[1, 1, 2, 2, 1, 3, 1, 1], &[(2, 7), (1, 6), (2, 7)]),
-        vec![20, 20, 20]
-    );
-}
+    fn test_codeforces() {
+        //this test case considers 1-indexing
+        assert_eq!(
+            powerful_array(&[i64::MAX, 1, 2, 1], &[(1, 2), (1, 3)]),
+            vec![3, 6]
+        );
+        //this test case considers 0-indexing
+        assert_eq!(
+            powerful_array(&[1, 1, 2, 2, 1, 3, 1, 1], &[(2, 7), (1, 6), (2, 7)]),
+            vec![20, 20, 20]
+        );
+    }
 }

@@ -1,5 +1,7 @@
 #![allow(unused_imports)]
-use code::optional::set6::max_overlapping_intervals::{max_overlapping_explicit, max_overlapping_ideomatic};
+use code::optional::set6::max_overlapping_intervals::{
+    max_overlapping_explicit, max_overlapping_ideomatic,
+};
 use code::test_util::TestCase;
 
 type TestC<'a> = TestCase<&'a [(usize, usize)], usize>;

@@ -99,6 +99,4 @@ mod test_woodcutters {
         let trees = &[(1, 2), (2, 2), (6, 3)];
         assert_eq!(woodcutters(trees), 3);
     }
-
 }
-

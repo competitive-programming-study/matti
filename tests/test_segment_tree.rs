@@ -1,3 +1,4 @@
+use code::data_structs::segment_tree::SegmentTreeSum;
 use code::data_structs::segment_tree::SegmentTree;
 use rand::{Rng, SeedableRng, rngs::StdRng};
 
@@ -115,4 +116,14 @@ fn random_operations_against_naive() {
             );
         }
     }
+}
+
+
+#[test]
+fn test_range_sum() {
+    let base_slice = [0,0,0,0,0];
+    let mut segment = SegmentTreeSum::build(&base_slice);
+    segment.range_add(0, 2, 1);
+    println!("{:?}",segment.tree);
+    assert_eq!(segment.range_sum(0, 2),3); 
 }
