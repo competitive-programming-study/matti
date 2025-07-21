@@ -40,7 +40,7 @@ mod test_wilbur_array {
     #[test]
     fn test_single_element() {
         let target = &[5];
-        assert_eq!(wilbur_array(target), 0);
+        assert_eq!(wilbur_array(target), 5);
     }
 
     #[test]
