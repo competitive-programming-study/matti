@@ -1,10 +1,10 @@
 #![allow(unused_imports)]
-use code::set10::power_array::power_array;
+use code::optional::set10::power_array::power_array;
 use code::test_case;
 use code::test_util::TestCase;
 
 #[test]
-fn test_codeforces() -> () {
+fn test_codeforces() {
     //this test case considers 1-indexing
     test_case!(
         power_array,

@@ -1,5 +1,5 @@
 #![allow(unused_imports)]
-use code::set6::longest_k_good_segment::longest_k_good_segment;
+use code::optional::set6::longest_k_good_segment::longest_k_good_segment;
 
 /**
  * Since there can be more multiple longest_k_good we consider a test passed
@@ -9,7 +9,7 @@ use code::set6::longest_k_good_segment::longest_k_good_segment;
  */
 
 #[test]
-fn test_1() -> () {
+fn test_1() {
     let v = [1, 2, 3, 4, 5];
     let k = 5;
 
@@ -18,7 +18,7 @@ fn test_1() -> () {
 }
 
 #[test]
-fn test_2() -> () {
+fn test_2() {
     let v = [6, 5, 1, 2, 3, 2, 1, 4, 5];
     let k = 3;
 
@@ -27,7 +27,7 @@ fn test_2() -> () {
 }
 
 #[test]
-fn test_3() -> () {
+fn test_3() {
     let v = [1, 2, 3];
     let k = 1;
 

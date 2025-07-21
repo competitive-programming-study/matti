@@ -1,10 +1,10 @@
 #![allow(unused_imports)]
-use code::set6::covering_interval::{covering_intervals, covering_intervals_sweep};
+use code::optional::set6::covering_interval::{covering_intervals, covering_intervals_sweep};
 use code::test_case;
 use code::test_util::TestCase;
 
 #[test]
-fn test_1() -> () {
+fn test_1() {
     let v: Vec<(i32, i32)> = vec![(1, 2), (3, 4), (5, 6)];
 
     let int = (2, 5);
@@ -13,7 +13,7 @@ fn test_1() -> () {
 }
 
 #[test]
-fn test_2() -> () {
+fn test_2() {
     let v: Vec<(i32, i32)> = vec![(1, 10), (10, 20)];
 
     let int = (21, 21);
@@ -22,7 +22,7 @@ fn test_2() -> () {
 }
 
 #[test]
-fn test_3() -> () {
+fn test_3() {
     let v: Vec<(i32, i32)> = vec![
         (8, 31),
         (2, 20),

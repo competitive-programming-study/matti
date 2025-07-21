@@ -1,10 +1,10 @@
 #![allow(unused_imports)]
-use code::set11::min_jumps::*;
+use code::optional::set11::min_jumps::*;
 use code::test_case;
 
 fn run_both(slice: &[usize], expected: Option<usize>) {
-    test_case!(min_jumps,(slice), expected);
-    test_case!(min_jumps_greedy,(slice), expected);
+    test_case!(min_jumps, (slice), expected);
+    test_case!(min_jumps_greedy, (slice), expected);
 }
 
 #[test]
@@ -22,13 +22,13 @@ fn test_cannot_jump() {
 #[test]
 fn test_exact_jumps() {
     run_both(&[2, 3, 1, 1, 4], Some(2)); // 0→1→4
-    run_both(&[1, 1, 1, 1], Some(3));     // 0→1→2→3
-    run_both(&[3, 2, 1, 0, 4], None);     // Can't reach end
+    run_both(&[1, 1, 1, 1], Some(3)); // 0→1→2→3
+    run_both(&[3, 2, 1, 0, 4], None); // Can't reach end
 }
 
 #[test]
 fn test_large_jump() {
-    run_both(&[5, 1, 1, 1, 1], Some(1));  // one jump covers all
+    run_both(&[5, 1, 1, 1, 1], Some(1)); // one jump covers all
     run_both(&[4, 2, 0, 0, 2, 0], Some(2)); // 0 -> 4 -> out
 }
 
@@ -43,4 +43,3 @@ fn test_big_input() {
     long_jump[0] = 999;
     run_both(&long_jump, Some(1));
 }
-

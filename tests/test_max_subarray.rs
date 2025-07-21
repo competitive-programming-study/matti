@@ -1,5 +1,5 @@
 #![allow(unused_imports)]
-use code::set1::max_subarray::*;
+use code::optional::set1::max_subarray::*;
 use code::test_util::TestCase;
 
 type TestC<'a> = TestCase<&'a [i32], Option<i32>>;
@@ -12,7 +12,7 @@ const FUN: [fn(&[i32]) -> Option<i32>; 3] = [
 ];
 
 #[test]
-fn test_empty() -> () {
+fn test_empty() {
     let v: Vec<i32> = vec![];
     TestC::new(&v, None).test_multiple(&FUN);
 
@@ -20,7 +20,7 @@ fn test_empty() -> () {
 }
 
 #[test]
-fn test_1() -> () {
+fn test_1() {
     let v: Vec<i32> = vec![-2, 1, -3, 4, -1, 2, 1, -5, 4];
     TestC::new(&v, Some(6)).test_multiple(&FUN);
 

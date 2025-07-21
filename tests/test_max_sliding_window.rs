@@ -1,5 +1,5 @@
 #![allow(unused_imports)]
-use code::set2::max_sliding_window::*;
+use code::optional::set2::max_sliding_window::*;
 use code::test_case;
 use code::test_util::*;
 
@@ -12,7 +12,7 @@ const TO_TEST: [fn(&[i32], usize) -> Option<Vec<i32>>; 5] = [
 ];
 
 #[test]
-fn test_empty() -> () {
+fn test_empty() {
     let mut v: Vec<i32> = vec![]; //checks for empty vector
     for k in 0usize..3 {
         for f in TO_TEST {
@@ -27,7 +27,7 @@ fn test_empty() -> () {
 }
 
 #[test]
-fn test_1() -> () {
+fn test_1() {
     let v = vec![1, 3, -1, -3, 5, 3, 6, 7];
     let k = 3usize;
     for f in TO_TEST {
@@ -36,7 +36,7 @@ fn test_1() -> () {
 }
 
 #[test]
-fn test_2() -> () {
+fn test_2() {
     let v = vec![1];
     let k = 1usize;
     for f in TO_TEST {
@@ -44,7 +44,7 @@ fn test_2() -> () {
     }
 }
 #[test]
-fn test_3() -> () {
+fn test_3() {
     let v = vec![7, 2, 5, 3, 4, 3];
     let k = 3usize;
     for f in TO_TEST {

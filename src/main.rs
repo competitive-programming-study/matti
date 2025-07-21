@@ -1,6 +1,6 @@
-use code::data_structs::segment_tree::SegmentTree;
+use code::optional::set15::woodcutters::woodcutters;
 
 fn main() {
-    let s = SegmentTree::build(&[5, 1, 4, 3, 2]);
-    println!("{:?}", s.tree);
+    let tree = [(1, 2), (2, 1), (5, 10), (10, 9), (20, 1)];
+    assert_eq!(woodcutters(&tree), 4);
 }

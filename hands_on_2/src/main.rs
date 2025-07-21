@@ -19,7 +19,7 @@ fn min_max_example() {
     ];
     let out = min_max::solve(&a, &q);
     //we remap the expected output since solve returns an array of Options
-    let expected_out: Vec<_> = vec![4, 4, 3, 4, 4].iter().map(|&x| Some(x)).collect();
+    let expected_out: Vec<_> = [4, 4, 3, 4, 4].iter().map(|&x| Some(x)).collect();
     assert_eq!(out, expected_out);
 }
 
@@ -68,16 +68,15 @@ fn is_there_example() {
         (6, 9, 8),
     ];
     let out_segment = is_there::solve_segment_tree(&a, &q);
-    let out_binary = is_there::solve_binary_lookup(&a,&q);
-    assert_eq!(out_segment,out_binary);
+    let out_binary = is_there::solve_binary_lookup(&a, &q);
+    assert_eq!(out_segment, out_binary);
     //We remap the expected output since solve returns an array of options
     let expected: Vec<Option<bool>> = [0, 1, 0, 1, 0, 0, 0, 1, 0]
         .iter()
         .map(|&v| Some(v != 0))
         .collect();
-    assert_eq!(out_segment,expected);
+    assert_eq!(out_segment, expected);
     assert_eq!(out_binary, expected);
-
 }
 
 fn is_there_parsing_example() {
@@ -92,7 +91,7 @@ fn is_there_parsing_example() {
     let (a, q) = is_there::parse_input(&fs::read_to_string(&input_path).unwrap());
     let expected = is_there::parse_output(&fs::read_to_string(&output_path).unwrap());
     assert_eq!(is_there::solve_segment_tree(&a, &q), expected);
-    assert_eq!(is_there::solve_binary_lookup(&a,&q), expected);
+    assert_eq!(is_there::solve_binary_lookup(&a, &q), expected);
 }
 
 fn main() {

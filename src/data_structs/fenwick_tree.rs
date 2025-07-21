@@ -15,10 +15,15 @@ where
         }
     }
 
+    #[allow(unused)]
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
+    }
+
     pub fn from(slice: &[T]) -> Self {
         let mut v = Vec::with_capacity(slice.len() + 1);
         v.push(T::default()); //we'll never use it
-        if slice.len() > 0 {
+        if !slice.is_empty() {
             v.push(slice[0]);
             for i in 1..slice.len() {
                 v.push(slice[i] + v[i - 1])
@@ -110,7 +115,7 @@ where
     }
 
     pub fn access(&self, i: usize) -> Result<T, &str> {
-        Ok(self.ft.sum(i)?)
+        self.ft.sum(i)
     }
 
     ///## Range Update
@@ -136,7 +141,7 @@ where
     ///## Add
     /// Add is just a special case of range_update where left == right
     pub fn add(&mut self, i: usize, v: T) -> Result<(), &str> {
-        Ok(self.range_update(i, i, v)?)
+        self.range_update(i, i, v)
     }
 }
 
@@ -194,7 +199,7 @@ where
 
         if (r + 1) < self.ft1.len() {
             let _ = self.ft1.add(r + 1, -v);
-            let _ = self.ft2.add(r + 1, RangeUpdate::multiply(v, r))?;
+            self.ft2.add(r + 1, RangeUpdate::multiply(v, r))?;
         }
 
         Ok(())

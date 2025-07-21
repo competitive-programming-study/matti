@@ -1,6 +1,6 @@
 #![allow(unused_imports)]
 use code::data_structs::segment_tree::SegmentTree;
-use code::set9::rmq::rmq;
+use code::optional::set9::rmq::rmq;
 use code::test_case;
 
 #[test]

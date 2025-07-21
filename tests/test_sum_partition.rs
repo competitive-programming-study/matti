@@ -1,7 +1,5 @@
 #![allow(unused_imports)]
-use code::set12::sum_partition::sum_partition;
-
-
+use code::optional::set12::sum_partition::sum_partition;
 
 #[test]
 fn test_empty_set() {
@@ -49,4 +47,3 @@ fn test_large_input_not_partitionable() {
     input.push(2); // Total = 101 → odd → can't be split
     assert!(!sum_partition(&input));
 }
-

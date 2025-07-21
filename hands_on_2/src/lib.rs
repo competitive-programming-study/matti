@@ -532,7 +532,7 @@ pub mod min_max {
     /// We can divide the `solve` method into 2 steps:
     /// - `SegmentTreeMinMax` construction: which takes O(n) time: O(n) for default initialization + O(n) for inititalization
     /// - Query answer: provided we supply m queries, and the time complexity for a query to the SegmentTree is Omega(log(n)), the
-    /// time complexity for this part is `m*log(n)`
+    ///   time complexity for this part is `m*log(n)`
     ///
     /// So the total time complexity is O(n + mlog(n));
     ///
@@ -645,8 +645,8 @@ pub mod is_there {
     ///
     /// ### Notes
     /// It uses a segment tree that for each range contains a hashset with all the existing values in that
-    /// particular range. 
-    /// 
+    /// particular range.
+    ///
     /// ### Parameters
     /// - A slice of n intervals in the range [0,n-1]
     /// - A slice of m 0-index based queries
@@ -673,11 +673,11 @@ pub mod is_there {
         ans
     }
 
-    /// 
+    ///
     /// Standard binary search that given a slice and a range returns
     /// true if at least one item falls under the range provided
     fn range_bin_search(a: &[usize], i: usize, j: usize) -> bool {
-        let (mut left,mut right) = (0,a.len());
+        let (mut left, mut right) = (0, a.len());
 
         // Find the smallest element >= i using manual binary search
         while left < right {
@@ -694,70 +694,70 @@ pub mod is_there {
 
     ///
     /// Public User-API method that returns the answer to a batch of queries provided a slice of segments
-    /// 
+    ///
     /// ### Notes
     /// IsThere(i,j,k) ask if there exists a point p in the range i,j covered by exactely k segments
-    /// 
+    ///
     /// the previous method achieves the same functionality, by storing in a hashmap all possible values
     /// of p in a specific range. While this is straighforward requires a lot of space and duplication of
-    /// items, plus it relies on HashSets. While operations on average are executed in constant time, we 
+    /// items, plus it relies on HashSets. While operations on average are executed in constant time, we
     /// can't expect (by modern implementation) to achieve an upper bound that is constant.
-    /// 
+    ///
     /// This approach relies much more on preprocessing, producing a data structure that allows for fast
     /// lookup operations (log(n)) without relying on segment trees, nor on hashing.
-    /// 
-    /// The idea is to compute the coverage interval. Having n segments in the range [0,n-1] we can 
+    ///
+    /// The idea is to compute the coverage interval. Having n segments in the range [0,n-1] we can
     /// preallocate a vector (lookup) for each different overlapping. we can then map each coverage, to a tuple,
     /// of the form (coverage_i,i). With this, for each coverage we insert (sorted) the points that have
     /// that specific coverage inside a vector, that we will store in the corresponding lookup[coverage] position
-    /// 
+    ///
     /// With this we can directly look up for the supposed k position, and binary (reverse) search the p point
     /// providing the range
-    /// 
+    ///
     /// ### Time Complexity
     /// - computing the coverage interval: O(n) + sorting O(nlog(n))
     /// - insert all items in the specific k vectors: O(n)
     /// - lookup per query: O(1) to access the k-th vector + O(log(n)) for binary search
-    /// 
+    ///
     /// ### Space complexity
     /// In order to avoid hashing which would have given better amortized time complexity we use an
     /// additional lookup vector to allow for worst-case O(1) insertion and lookup.
-    /// 
+    ///
     /// We pay O(n) for the lookup vector + a sparse O(n) for each point in the interval.
-    /// 
+    ///
     /// The Space complexity is linear in the number of segments (or the interval) we have to cover
     pub fn solve_binary_lookup(segs: &[Segment], queries: &[Query]) -> Vec<Option<bool>> {
         //build the coverage interval then map it to get the points in the interval
         //prioritize (cov,point)
-        let mut cov: Vec<(usize,usize)> = coverage_interval(&segs)
+        let mut cov: Vec<(usize, usize)> = coverage_interval(segs)
             .iter()
             .enumerate()
-            .map(|(i,&cov)|(cov,i))
+            .map(|(i, &cov)| (cov, i))
             .collect();
         //sort the tuples lexicographically (by first item, then second)
         cov.sort_unstable();
 
         //build the lookup table
-        //we need an additional vector for each possible overlapping 
+        //we need an additional vector for each possible overlapping
         //having n segments the highest possible overlapping is a point
         //covered by all segments
-        let mut lookup: Vec<Option<Vec<usize>>> = vec![None;segs.len()+1];
+        let mut lookup: Vec<Option<Vec<usize>>> = vec![None; segs.len() + 1];
 
-        for (c,i) in cov {
+        for (c, i) in cov {
             match &mut lookup[c] {
-                Some(v) => v.push(i),  //push to existing vector
-                None => lookup[c] = Some(vec![i])       //create a new vector with the item
+                Some(v) => v.push(i),              //push to existing vector
+                None => lookup[c] = Some(vec![i]), //create a new vector with the item
             };
         }
 
         let mut answers: Vec<Option<bool>> = Vec::with_capacity(queries.len());
 
-        for &(i,j,k) in queries {
-            answers.push(Some(
-                if let Some(v) = &lookup[k] {
-                    range_bin_search(v,i,j)
-                } else {false}
-            ));
+        for &(i, j, k) in queries {
+            answers.push(Some(if let Some(v) = &lookup[k] {
+                range_bin_search(v, i, j)
+            } else {
+                false
+            }));
         }
         answers
     }
@@ -938,7 +938,11 @@ mod test_is_there {
         current_dir().unwrap().join("test_is_there").join(name)
     }
 
-    fn test_files(input_name: &str, output_name: &str, fun: fn(&[Segment],&[Query]) -> Vec<Option<bool>>) {
+    fn test_files(
+        input_name: &str,
+        output_name: &str,
+        fun: fn(&[Segment], &[Query]) -> Vec<Option<bool>>,
+    ) {
         let (input_path, output_path) = (test_path(input_name), test_path(output_name));
         let (input, output) = (
             read_to_string(input_path).unwrap(),
@@ -964,7 +968,7 @@ mod test_is_there {
         for i in 0..=7 {
             let input = format!("input{i}.txt");
             let output = format!("output{i}.txt");
-            test_files(&input, &output,solve_segment_tree);
+            test_files(&input, &output, solve_segment_tree);
         }
     }
 
@@ -973,7 +977,7 @@ mod test_is_there {
         for i in 0..=7 {
             let input = format!("input{i}.txt");
             let output = format!("output{i}.txt");
-            test_files(&input, &output,solve_binary_lookup);
+            test_files(&input, &output, solve_binary_lookup);
         }
     }
 }

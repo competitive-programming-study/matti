@@ -26,14 +26,16 @@ macro_rules! tree_leaf {
     };
 }
 
-#[derive(Debug)]
 pub struct TreeNode<T> {
     pub val: T,
     pub left: Option<Box<TreeNode<T>>>,
     pub right: Option<Box<TreeNode<T>>>,
 }
 
-impl<T: std::fmt::Display> TreeNode<T> {
+impl<T> TreeNode<T>
+where
+    T: std::fmt::Debug + std::fmt::Display,
+{
     ///
     /// Base constructor
     ///
@@ -96,52 +98,51 @@ impl<T: std::fmt::Display> TreeNode<T> {
     /// Checks if a TreeNode is a leaf node
     ///
     pub fn is_leaf(&self) -> bool {
-        match (self.get_left(), self.get_right()) {
-            (None, None) => true,
-            _ => false,
-        }
+        matches!((self.get_left(), self.get_right()), (None, None))
     }
 
-    ///
-    /// String representation of a tree
-    ///
-    pub fn to_string(&self) -> String {
-        fn build<T: std::fmt::Display>(
-            node: &TreeNode<T>,
-            prefix: String,
-            is_left: bool,
-            output: &mut String,
-            has_sibling: bool,
-        ) {
-            if let Some(ref right) = node.right {
-                let new_prefix = format!("{}{}", prefix, if is_left { "│   " } else { "    " });
-                build(right, new_prefix, false, output, node.left.is_some());
-            }
+    //
+    // String representation of a tree
+    //
+    // Disabled so it doesn't generate clippy warnings [not used]
+    //
+    // pub fn to_string(&self) -> String {
+    //     fn build(
+    //         node: &TreeNode<impl std::fmt::Debug>,
+    //         prefix: String,
+    //         is_left: bool,
+    //         output: &mut String,
+    //         has_sibling: bool,
+    //     ) {
+    //         if let Some(ref right) = node.right {
+    //             let new_prefix = format!("{}{}", prefix, if is_left { "│   " } else { "    " });
+    //             build(right, new_prefix, false, output, node.left.is_some());
+    //         }
 
-            output.push_str(&prefix);
-            if is_left {
-                output.push_str("└── ");
-            } else {
-                output.push_str("┌── ");
-            }
-            output.push_str(&format!("{}\n", node.val));
+    //         output.push_str(&prefix);
+    //         if is_left {
+    //             output.push_str("└── ");
+    //         } else {
+    //             output.push_str("┌── ");
+    //         }
+    //         output.push_str(&format!("{:?}\n", node.val));
 
-            if let Some(ref left) = node.left {
-                let new_prefix = format!(
-                    "{}{}",
-                    prefix,
-                    if is_left && has_sibling {
-                        "│   "
-                    } else {
-                        "    "
-                    }
-                );
-                build(left, new_prefix, true, output, false);
-            }
-        }
+    //         if let Some(ref left) = node.left {
+    //             let new_prefix = format!(
+    //                 "{}{}",
+    //                 prefix,
+    //                 if is_left && has_sibling {
+    //                     "│   "
+    //                 } else {
+    //                     "    "
+    //                 }
+    //             );
+    //             build(left, new_prefix, true, output, false);
+    //         }
+    //     }
 
-        let mut result = String::new();
-        build(self, "".to_string(), false, &mut result, false);
-        result
-    }
+    //     let mut result = String::new();
+    //     build(self, "".to_string(), false, &mut result, false);
+    //     result
+    // }
 }

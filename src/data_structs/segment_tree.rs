@@ -3,7 +3,6 @@
  * compute range min queries, and can update values in range
  * by addition
  */
-
 pub struct SegmentTree {
     n: usize,
     pub tree: Vec<i64>,
@@ -13,6 +12,11 @@ pub struct SegmentTree {
 impl SegmentTree {
     pub fn len(&self) -> usize {
         self.n
+    }
+
+    #[allow(unused)]
+    pub fn is_empty(&self) -> bool {
+        self.n == 0
     }
 
     fn construct(a: &[i64], seg: &mut [i64], idx: usize, left: usize, right: usize) {
@@ -64,7 +68,7 @@ impl SegmentTree {
         qleft: usize,
         qright: usize,
         val: i64,
-    ) -> () {
+    ) {
         //check overlaps
         if qleft > right || qright < left {
             return; //no overlap

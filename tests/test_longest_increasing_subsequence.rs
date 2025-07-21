@@ -1,12 +1,10 @@
 #![allow(unused_imports)]
-use code::set13::longest_increasing_subsequence::*;
+use code::optional::set13::longest_increasing_subsequence::*;
 use code::test_case;
 
-
-
 fn run_both_versions(input: &[i32], expected: usize) {
-    test_case!(longest_increasing_subsequence,(input), expected);
-    test_case!(longest_increasing_subsequence_binary,(input), expected);
+    test_case!(longest_increasing_subsequence, (input), expected);
+    test_case!(longest_increasing_subsequence_binary, (input), expected);
 }
 
 #[test]
@@ -44,4 +42,3 @@ fn test_all_duplicates() {
 fn test_zigzag_pattern() {
     run_both_versions(&[1, 3, 2, 4, 3, 5], 4); // [1,2,3,5]
 }
-
